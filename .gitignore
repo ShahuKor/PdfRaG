@@ -32,3 +32,4 @@ Thumbs.db
 .env.docker
 Dockerfile
 
+/server/uploads
