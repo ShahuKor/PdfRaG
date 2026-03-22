@@ -5,8 +5,9 @@ import multer from "multer";
 import { QdrantVectorStore } from "@langchain/qdrant";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { Queue } from "bullmq";
-
+import OpenAI from "openai";
 dotenv.config();
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const embeddings = new OpenAIEmbeddings({
   model: "text-embedding-3-small",
@@ -15,7 +16,7 @@ const embeddings = new OpenAIEmbeddings({
 const queue = new Queue("PDFQueue", {
   connection: {
     host: "localhost",
-    port: "6379",
+    port: 6379,
   },
 });
 
@@ -59,12 +60,32 @@ app.get("/chat", async (req, res) => {
       collectionName: "pdf-rag",
     },
   );
-  const userquery = "What is the deposit paid amount";
+  const userquery = req.query.message;
   const retriever = vectorStore.asRetriever({
     k: 2,
   });
   const output = await retriever.invoke(userquery);
-  return res.json({ output });
+
+  const SYSTEM_PROMPT = `You are a helpful AI assistant who anwers the user query based on the available context from the pdf file. 
+  Context : ${JSON.stringify(output)}`;
+
+  const chatResult = await client.responses.create({
+    model: "gpt-4o-mini",
+    input: [
+      {
+        role: "system",
+        content: SYSTEM_PROMPT,
+      },
+      {
+        role: "user",
+        content: userquery,
+      },
+    ],
+  });
+  return res.json({
+    message: chatResult.output[0].content[0].text,
+    docs: output,
+  });
 });
 
 app.listen(process.env.PORT, () => {
