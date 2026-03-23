@@ -4,11 +4,8 @@ import FileUpload from "@/components/pdfcomponents/fileupload";
 
 export default function Page() {
   return (
-    <div className="flex w-full min-h-screen">
-      <div className="w-[30%] p-10">
-        <FileUpload />
-      </div>
-      <div className="w-[70%] border-l border-neutral-500/40 p-10">
+    <div className="w-full h-screen overflow-hidden">
+      <div className="p-20 flex flex-col h-full w-full justify-center">
         <ChatComponent />
       </div>
     </div>
