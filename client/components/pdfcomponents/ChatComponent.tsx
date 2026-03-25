@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import PageBadge from "../ui/PageBadge";
@@ -10,9 +11,7 @@ import UserIcon from "../ui/UserIcon";
 interface Doc {
   pageContent?: string;
   metadata?: {
-    loc?: {
-      pageNumber?: number;
-    };
+    loc?: { pageNumber?: number };
     source?: string;
   };
 }
@@ -23,30 +22,78 @@ interface IMessage {
   documents?: Doc[];
 }
 
-export default function ChatComponent() {
+interface ChatComponentProps {
+  pdfId: string;
+}
+
+export default function ChatComponent({ pdfId }: ChatComponentProps) {
+  const { getToken } = useAuth();
   const [message, setMessage] = useState<string>("");
   const [chatMessage, setChatMessage] = useState<IMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+
+  async function authFetch(path: string, options: RequestInit = {}) {
+    const token = await getToken();
+    return fetch(`${API}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers ?? {}),
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  // Load existing chat history on mount
+  useEffect(() => {
+    async function loadHistory() {
+      try {
+        const res = await authFetch(`/api/pdfs/${pdfId}/chat`);
+        const data = await res.json();
+        if (data.messages?.length) {
+          setChatMessage(
+            data.messages.map((m: { role: string; content: string }) => ({
+              role: m.role,
+              content: m.content,
+            })),
+          );
+        }
+      } finally {
+        setHistoryLoaded(true);
+      }
+    }
+    loadHistory();
+  }, [pdfId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessage, isLoading]);
 
   const handleSendChatMessage = async () => {
-    if (!message.trim()) return;
+    if (!message.trim() || isLoading) return;
     const userMessage = message;
     setMessage("");
     setChatMessage((prev) => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
     try {
-      const res = await fetch(
-        `http://localhost:8000/chat?message=${encodeURIComponent(userMessage)}`,
-      );
+      const res = await authFetch(`/api/pdfs/${pdfId}/chat`, {
+        method: "POST",
+        body: JSON.stringify({ message: userMessage }),
+      });
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Something went wrong");
       setChatMessage((prev) => [
         ...prev,
-        { role: "assistant", content: data?.message, documents: data?.docs },
+        { role: "assistant", content: data?.message, documents: data?.sources },
+      ]);
+    } catch (e: any) {
+      setChatMessage((prev) => [
+        ...prev,
+        { role: "assistant", content: `Error: ${e.message}` },
       ]);
     } finally {
       setIsLoading(false);
@@ -68,9 +115,16 @@ export default function ChatComponent() {
     return [...new Set(pages)].sort((a, b) => a - b);
   };
 
+  if (!historyLoaded) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full border-2 border-indigo-400 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="h-full flex flex-col gap-3 overflow-hidden px-2">
-      {/* Messages area */}
       <div className="flex-1 overflow-y-auto rounded-xl border border-neutral-200 bg-neutral-50 p-4 min-h-0">
         {chatMessage.length === 0 && (
           <div className="h-full flex flex-col items-center justify-center text-neutral-400 gap-2">
@@ -95,27 +149,21 @@ export default function ChatComponent() {
           {chatMessage.map((mes, index) => (
             <div
               key={index}
-              className={`flex items-end gap-2 ${
-                mes.role === "user" ? "flex-row-reverse" : "flex-row"
-              }`}
+              className={`flex items-end gap-2 ${mes.role === "user" ? "flex-row-reverse" : "flex-row"}`}
             >
               {mes.role === "user" ? <UserIcon /> : <AIcon />}
-
               <div
-                className={`flex flex-col gap-1.5 max-w-[75%] ${
-                  mes.role === "user" ? "items-end" : "items-start"
-                }`}
+                className={`flex flex-col gap-1.5 max-w-[75%] ${mes.role === "user" ? "items-end" : "items-start"}`}
               >
                 <div
-                  className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm whitespace-pre-wrap ${
+                  className={`px-4 py-2.5 rounded-md text-sm leading-relaxed shadow-sm whitespace-pre-wrap ${
                     mes.role === "user"
-                      ? "bg-indigo-500 text-white rounded-br-sm"
+                      ? "bg-slate-500 text-white rounded-br-sm"
                       : "bg-white border border-neutral-200 text-neutral-800 rounded-bl-sm"
                   }`}
                 >
                   {mes.content}
                 </div>
-
                 {mes.role === "assistant" &&
                   getPageNumbers(mes.documents).length > 0 && (
                     <div className="flex flex-wrap gap-1.5 px-1 items-center">
@@ -130,13 +178,11 @@ export default function ChatComponent() {
               </div>
             </div>
           ))}
-
           {isLoading && <TypingIndicator />}
           <div ref={bottomRef} />
         </div>
       </div>
 
-      {/* Input area */}
       <div className="flex gap-2">
         <Input
           value={message}

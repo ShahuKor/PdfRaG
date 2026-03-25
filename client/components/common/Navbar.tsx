@@ -33,6 +33,13 @@ export default function Navbar() {
             <div className="hidden md:flex">
               <Show when="signed-in">
                 <div className={linkClass}>
+                  <Link href={"/dashboard"}>
+                    <span className="text-sm">Dashboard</span>
+                  </Link>
+                </div>
+              </Show>
+              <Show when="signed-in">
+                <div className={linkClass}>
                   <span className="text-sm">
                     <SignOutButton />
                   </span>
