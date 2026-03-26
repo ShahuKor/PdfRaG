@@ -3,7 +3,8 @@ import multer from "multer";
 import { eq, and } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { pdfs } from "../db/schema.js";
-import { uploadToS3, deleteFromS3 } from "../lib/s3.js";
+import { uploadToS3, deleteFromS3, getPresigned } from "../lib/s3.js";
+
 import { pdfQueue } from "../lib/queue.js";
 import { requireAuth } from "../middleware/auth.js";
 
@@ -87,6 +88,27 @@ router.get("/:id", requireAuth, async (req, res) => {
   } catch (err) {
     console.error("Get PDF error:", err);
     return res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/pdfs/:id/url
+router.get("/:id/url", requireAuth, async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const [pdf] = await db
+      .select()
+      .from(pdfs)
+      .where(and(eq(pdfs.id, id), eq(pdfs.clerkUserId, req.userId)));
+
+    if (!pdf) return res.status(404).json({ error: "PDF not found" });
+
+    const url = await getPresigned(pdf.s3Key);
+
+    return res.json({ url });
+  } catch (error) {
+    console.error("Failed to generate Presignedurl", error);
+    return res.status(500).json({ error: error.message });
   }
 });
 

@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { UserButton } from "@clerk/nextjs";
 
 interface Pdf {
   id: string;

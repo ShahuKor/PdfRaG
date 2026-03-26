@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { UserButton } from "@clerk/nextjs";
 import ChatComponent from "@/components/pdfcomponents/ChatComponent";
+import PdfViewer from "@/components/pdfcomponents/PdfViewer";
 
 interface Pdf {
   id: string;
@@ -43,9 +43,9 @@ export default function ChatPage() {
   }, [id]);
 
   return (
-    <div>
+    <div className="h-screen flex flex-col bg-[#F7F6F3]">
       <header className="shrink-0 bg-[#F7F6F3]/80 backdrop-blur border-b border-neutral-200/70 z-10">
-        <div className="max-w-4xl mx-auto px-6 h-14 flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center gap-3">
           {/* Back button */}
           <button
             onClick={() => router.push("/dashboard")}
@@ -84,7 +84,7 @@ export default function ChatPage() {
       </header>
 
       {/* ── Body ── */}
-      <div className="flex-1 min-h-0 max-w-4xl w-full mx-auto px-6 py-4">
+      <div className="flex-1 min-h-0 max-w-7xl w-full mx-auto px-6 py-4">
         {loading ? (
           <div className="h-full flex items-center justify-center">
             <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
@@ -123,7 +123,14 @@ export default function ChatPage() {
             </p>
           </div>
         ) : (
-          <ChatComponent pdfId={id} />
+          <div className="flex gap-4 h-full">
+            <div className="w-1/2 min-h-0">
+              <PdfViewer pdfId={id} filename={pdf?.filename} />
+            </div>
+            <div className="w-1/2 min-h-0">
+              <ChatComponent pdfId={id} />
+            </div>
+          </div>
         )}
       </div>
     </div>
