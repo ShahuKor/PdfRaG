@@ -56,10 +56,13 @@ export default function ChatComponent({ pdfId }: ChatComponentProps) {
         const data = await res.json();
         if (data.messages?.length) {
           setChatMessage(
-            data.messages.map((m: { role: string; content: string }) => ({
-              role: m.role,
-              content: m.content,
-            })),
+            data.messages.map(
+              (m: { role: string; content: string; sources: Doc[] }) => ({
+                role: m.role,
+                content: m.content,
+                documents: m.sources ?? [],
+              }),
+            ),
           );
         }
       } finally {

@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, jsonb } from "drizzle-orm/pg-core";
 
 export const pdfs = pgTable("pdfs", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -16,5 +16,6 @@ export const messages = pgTable("messages", {
     .references(() => pdfs.id, { onDelete: "cascade" }),
   role: text("role").notNull(), // 'user' | 'assistant'
   content: text("content").notNull(),
+  sources: jsonb("sources").default(null),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

@@ -66,7 +66,12 @@ ${chunks.map((c) => c.pageContent).join("\n\n---\n\n")}`;
     // 6. Persist both turns to DB
     await db.insert(messages).values([
       { pdfId: pdf.id, role: "user", content: message },
-      { pdfId: pdf.id, role: "assistant", content: assistantMessage },
+      {
+        pdfId: pdf.id,
+        role: "assistant",
+        content: assistantMessage,
+        sources: chunks,
+      },
     ]);
 
     return res.json({ message: assistantMessage, sources: chunks });
