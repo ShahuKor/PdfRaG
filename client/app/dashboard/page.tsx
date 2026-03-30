@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 interface Pdf {
   id: string;
@@ -133,6 +135,12 @@ export default function Dashboard() {
     <div className="min-h-screen bg-neutral-50 font-sans">
       <main className="max-w-5xl mx-auto px-6 py-10">
         <div className="mb-8">
+          <Link href="/">
+            <button className="mb-6 flex gap-2 items-center  bg-neutral-700 hover:bg-neutral-800 transition-all duration-300 text-white px-2 py-1 sm:py-2 rounded-sm border">
+              <ArrowLeft className="size-2 sm:size-3" />
+              <span className="text-[10px] sm:text-xs">Go Back</span>
+            </button>
+          </Link>
           <h1 className="text-2xl font-semibold text-neutral-900 tracking-tight">
             My Documents
           </h1>
