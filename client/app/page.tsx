@@ -1,9 +1,12 @@
+import { Container } from "@/components/common/Container";
 import Hero from "@/components/common/Hero";
 
 export default function Home() {
   return (
     <div>
-      <Hero />
+      <Container>
+        <Hero />
+      </Container>
     </div>
   );
 }
