@@ -7,17 +7,17 @@ export default async function Hero() {
   const user = await currentUser();
 
   return (
-    <main className=" flex flex-col items-center justify-center min-h-[520px] px-8 py-24 mt-10 md:mt-20">
+    <main className=" flex flex-col items-center justify-center min-h-[520px] px-8 py-10 md:py-24 mt-10 md:mt-20">
       <div className="relative">
         <div className="flex flex-col justify-start max-w-xl lg:max-w-3xl">
           {/* Content */}
 
-          <p className=" absolute lg:left-17 lg:-top-5 md:left-9 md:-top-3 hidden md:block text-[8px] lg:text-[12px] font-medium tracking-[0.12em] uppercase text-blue-400 ">
+          <p className=" absolute lg:left-17 lg:-top-5 md:left-9 md:-top-3 hidden md:block text-[8px] lg:text-[12px] font-medium tracking-[0.12em] uppercase text-neutral-500 ">
             Prysm
           </p>
 
           <div className="flex flex-col items-center gap-0 text-center">
-            <p className="md:hidden text-[8px] lg:text-[12px] font-medium tracking-[0.12em] uppercase text-blue-400 mb-1">
+            <p className="md:hidden text-[8px] lg:text-[12px] font-medium tracking-[0.12em] uppercase text-neutral-500 mb-1">
               Prysm
             </p>
             <h1 className="font-sans text-4xl md:text-5xl lg:text-6xl font-normal  tracking-tight text-neutral-900 mb-1">
@@ -36,12 +36,12 @@ export default async function Hero() {
             <Show when="signed-out">
               <div className="flex gap-2">
                 <Link href="/sign-in">
-                  <button className="bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-medium p-2 w-16 md:w-18 rounded-md hover:text-neutral-700 transition-all duration-300 border border-neutral-700/10 text-[10px] md:text-sm">
+                  <button className="bg-neutral-50 hover:bg-neutral-100 text-neutral-600 font-medium p-2 w-16 md:w-18 rounded-sm hover:text-neutral-800 transition-all duration-300 border border-neutral-700/10 text-[10px] md:text-sm">
                     Login
                   </button>
                 </Link>
                 <Link href="/sign-up">
-                  <button className="bg-neutral-800 hover:bg-neutral-700 text-white font-medium p-2 w-18 md:w-22 rounded-md hover:text-neutral-100 transition-all duration-300 border border-neutral-700/10 text-[10px] md:text-sm">
+                  <button className="bg-neutral-800 hover:bg-yellow-300 text-white font-medium p-2 w-18 md:w-22 rounded-sm hover:text-neutral-100 transition-all duration-300 border border-neutral-700/10 hover:border-yellow-300 text-[10px] md:text-sm">
                     Sign Up
                   </button>
                 </Link>

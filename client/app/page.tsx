@@ -1,5 +1,5 @@
-import { Container } from "@/components/common/Container";
 import Hero from "@/components/common/Hero";
+import HowItWorks from "@/components/common/HowItWorks";
 
 export default function Home() {
   return (
@@ -12,10 +12,10 @@ export default function Home() {
           backgroundSize: "28px 28px",
         }}
       />
-      <div className="relative overflow-hidden">
-        <div className="absolute -top-16 -left-20 w-80 h-80 rounded-full bg-blue-100 blur-[80px] opacity-60 pointer-events-none" />
-        <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full bg-amber-100 blur-[70px] opacity-65 pointer-events-none" />
+      <div className="relative">
+        <div className="absolute -top-16 -left-20 w-80 h-80 rounded-full bg-teal-100/60 blur-[80px] opacity-60 pointer-events-none" />
         <Hero />
+        <HowItWorks />
       </div>
     </div>
   );
