@@ -1,3 +1,4 @@
+import Footer from "@/components/common/Footer";
 import GetStarted from "@/components/common/GetStarted";
 import Hero from "@/components/common/Hero";
 import HowItWorks from "@/components/common/HowItWorks";
@@ -18,6 +19,7 @@ export default function Home() {
         <Hero />
         <HowItWorks />
         <GetStarted />
+        <Footer />
       </div>
     </div>
   );

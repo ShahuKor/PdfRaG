@@ -3,13 +3,13 @@ import Link from "next/link";
 
 export default function GetStarted() {
   return (
-    <div className="flex flex-col items-center justify-center py-15 md:py-24 px-8 md:px-2 text-center">
+    <div className="flex flex-col items-center justify-center py-15 md:py-24 px-8 md:px-2 text-center md:mb-20">
       <h2 className=" font-sans font-medium mt-3 text-2xl md:text-4xl tracking-tight text-neutral-800">
         Ready To Save Hours of Time understanding PDFs ?
       </h2>
       <p className="mt-5 text-[12px] sm:text-md md:text-lg text-gray-500 leading-relaxed">
-        Learn Fast, Improve proficiency, and understand more information your
-        document
+        Learn Fast, Improve proficiency, and understand more information about
+        your document
       </p>
 
       <div className="mt-6 md:mt-8">
