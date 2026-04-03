@@ -44,7 +44,7 @@ export default function HowItWorks() {
           <span className="text-sm font-semibold text-yellow-400 uppercase tracking-widest">
             Features
           </span>
-          <h2 className="font-sans font-medium mt-3 text-4xl tracking-tight text-neutral-800">
+          <h2 className="font-sans font-medium mt-3 text-2xl md:text-4xl tracking-tight text-neutral-800">
             Get More than just a ChatBot
           </h2>
           <p className="mt-4 text-[12px] sm:text-md md:text-lg text-gray-500 leading-relaxed">
@@ -67,7 +67,7 @@ export default function HowItWorks() {
               <div
                 className={`max-w-xl flex-1 self-center ${!isEven ? "lg:order-last" : ""}`}
               >
-                <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
+                <h3 className="text-xl md:text-2xl font-medium text-gray-900 tracking-tight">
                   {feature.title}
                 </h3>
                 <ul className="mt-4 space-y-4">

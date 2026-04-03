@@ -1,3 +1,4 @@
+import GetStarted from "@/components/common/GetStarted";
 import Hero from "@/components/common/Hero";
 import HowItWorks from "@/components/common/HowItWorks";
 
@@ -16,6 +17,7 @@ export default function Home() {
         <div className="absolute -top-16 -left-20 w-80 h-80 rounded-full bg-teal-100/60 blur-[80px] opacity-60 pointer-events-none" />
         <Hero />
         <HowItWorks />
+        <GetStarted />
       </div>
     </div>
   );
